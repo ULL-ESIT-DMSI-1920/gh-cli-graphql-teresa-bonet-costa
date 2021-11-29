@@ -1,82 +1,67 @@
-#!/usr/bin/env node
-
+#! /usr/bin/env node
 const ins = require("util").inspect;
-const deb = (...args) => { 
-    if (debug) console.log(ins(...args, {depth: null})); 
-};
 
-const fs = require("fs");
 const shell = require('shelljs');
-const { program } = require('commander');
-const {version} = require("./package.json");
+const { Command } = require('commander');
+const program = new Command();
+const { version } = require("./package.json")
 
-program 
+program
   .version(version)
-  .option('-o, --org <organization>', 'specifies the organization')
-  .option('-r, --repo <reponame>', 'specifies the repository')
+  .option('-r, --repo <repo>', 'repository')
+  .option('-o, --org <org>', 'org')
   .option('-n, --name <name>', 'name');
 
 program.parse(process.argv);
 
 let args = program.args;
+debugger;
 
-const getrepoId = (owner, name) => `
-query getrepoId{
-    repository(owner: "${owner}", name: "${name}"){
-      Id
+const getRepoId = (owner, name) => `
+query {
+  repository(owner: "${owner}", name: "${name}") {
+    id
+  }
+}
+`;
+
+const renameRepo = (id, newName) => `
+mutation {
+  updateRepository(input: {name: "${newName}", repositoryId: "${id}"}) {
+    repository {
+      name
     }
   }
- `;
-
-const renamerepo = (Id, newName) => `   
-  mutation renamerepo{
-    updateRepository(input: 
-      {
-        name: "${newName}"
-        repositoryId: "${Id}"
-      }
-    ) {
-      repository{
-        name
-      }
-    }
-  }
+}
 `;
 
 let { org, repo, name } = program.opts();
 
 if (!org || ! repo || !name) program.help();
 
-if (!shell.which('git')) {
-    shell.echo('Sorry, this extension requires git');
-}
-if (!shell.which('gh')) {
-   shell.echo('Sorry, this extension requires GitHub Cli');
-}
+if (!shell.which('git')) shell.echo("git not installed")
+if (!shell.which('gh')) shell.echo("gh not installed");
 
-let r = shell.exec(`gh api graphql -f query='${getrepoId(org, repo)}' --jq '.data.repository.Id'`, 
-  {silent: true}
-);
+// console.log(getRepoId(org, repo))
+
+let r = shell.exec(`gh api  graphql -f query='${getRepoId(org, repo)}' --jq '.data.repository.id'`, 
+                   {silent: true});
 if (r.code !== 0) {
-  console.error(r.stderr)
-  process.exit(r.code)
+  console.error(r.stderr);
+  process.exit(r.code);
 }
+// console.log("getRepoId return = ", r.stdout);
 
-//console.log("getrepoId return: \n", r.stdout)
-const Id = r.stdout.replace( /\s/,'')
-// \s -> todas los espacios en blanco 
-// \s+ -> 
-// \n -> retorno de carro
-// \ -> tabulador
-// si añadimos una g al final: /\s+\g -> se quitarán todos los espacios
-// si añadimos un $ /\s+$/ -> solo si es al final 
+const Id = r.stdout.replace(/\s+$/g,'');
 
-r = shell.exec(`gh api graphql -f query='${renamerepo(Id, name)}' --jq '.data.updateRepository.repository.name'` , 
-  {silent: true}
-);
+//  stdout: '{"data":{"updateRepository":{"repository":{"name":"prueba"}}}}'
+r  = shell.exec(
+  `gh api graphql -f query='${renameRepo(Id, name)}'  --jq '.data.updateRepository.repository.name'`,
+  {silent:true})
+
 if (r.code !== 0) {
-  console.error(r.stderr)
-  process.exit(r.code)
+    console.error(r.stderr);
+    process.exit(r.code);
 }
 
-console.log(`The repo '${org}/${repo}' has been renamed to ${r.stdout.replace(/\s+$/,'')}'`)
+console.log(`The repo '${org}/${repo}' has been renamed to '${r.stdout.replace(/\s+$/,'')}'`)
