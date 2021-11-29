@@ -79,4 +79,4 @@ if (r.code !== 0) {
   process.exit(r.code)
 }
 
-console.log(`The repo '${org}/${repo}' has been renamed to ${r.stdout}'`)
+console.log(`The repo '${org}/${repo}' has been renamed to ${r.stdout.replace(/\s+$/,'')}'`)
