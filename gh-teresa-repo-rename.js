@@ -20,20 +20,20 @@ program.parse(process.argv);
 
 let args = program.args;
 
-const getrepoID = (owner, name) => `
-query getrepoID{
+const getrepoId = (owner, name) => `
+query getrepoId{
     repository(owner: "${owner}", name: "${name}"){
-      id
+      Id
     }
   }
  `;
 
-const renamerepo = (id, newName) => `   
+const renamerepo = (Id, newName) => `   
   mutation renamerepo{
     updateRepository(input: 
       {
         name: "${newName}"
-        repositoryId: "${id}"
+        repositoryId: "${Id}"
       }
     ) {
       repository{
@@ -54,7 +54,7 @@ if (!shell.which('gh')) {
    shell.echo('Sorry, this extension requires GitHub Cli');
 }
 
-let r = shell.exec(`gh api graphql -f query='${getrepoID(org, repo)}' --jq '.data.repository.id'`, 
+let r = shell.exec(`gh api graphql -f query='${getrepoId(org, repo)}' --jq '.data.repository.Id'`, 
   {silent: true}
 );
 if (r.code !== 0) {
@@ -62,10 +62,16 @@ if (r.code !== 0) {
   process.exit(r.code)
 }
 
-//console.log("getrepoID return: \n", r.stdout)
-const ID = r.stdout
+//console.log("getrepoId return: \n", r.stdout)
+const Id = r.stdout.replace( /\s/,'')
+// \s -> todas los espacios en blanco 
+// \s+ -> 
+// \n -> retorno de carro
+// \ -> tabulador
+// si añadimos una g al final: /\s+\g -> se quitarán todos los espacios
+// si añadimos un $ /\s+$/ -> solo si es al final 
 
-r = shell.exec(`gh api graphql -f query='${renamerepo(ID, name)}' --jq '.data.updateRepository.repository.name'` , 
+r = shell.exec(`gh api graphql -f query='${renamerepo(Id, name)}' --jq '.data.updateRepository.repository.name'` , 
   {silent: true}
 );
 if (r.code !== 0) {
@@ -73,4 +79,4 @@ if (r.code !== 0) {
   process.exit(r.code)
 }
 
-console.log("El nombre del repositorio es: ", r.stdout)
+console.log(`The repo '${org}/${repo}' has been renamed to ${r.stdout}'`)
