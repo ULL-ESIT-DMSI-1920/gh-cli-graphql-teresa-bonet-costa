@@ -1,6 +1,7 @@
 # List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
 tasks:
-  - init: brew install gh; export GITHUB_TOKEN=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; eval "$(gh completion -s bash)" # runs during prebuild
+  - init: brew install gh; export GITHUB_TOKEN=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; eval "$(gh completion -s bash)"; npm i; nvm i; brew install gh;  gh extension install crguezl/gh-submodule-add; git remote add https://github.com/TeresaUll/gh-repo-rename;
+ # runs during prebuild
     command: echo 'start script'
 
 # List the ports to expose. Learn more https://www.gitpod.io/docs/config-ports/
