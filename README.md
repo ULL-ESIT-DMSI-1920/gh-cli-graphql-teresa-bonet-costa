@@ -88,7 +88,11 @@ Una vez obtenido el id debemos cambiarle el nombre al repositorio, esto lo podem
 
 ## Clonar el repositorio a un repositorio de nuestro perfil
 
-Hemos desarrollado el código en el repositorio que se encuentra dentro de la organización de la asignatura, pero ahora vamos a clonarlo al perfil individual para seguir con las normas de extensiones. Para ello  ejecutamos:
+Hemos desarrollado el código en el repositorio que se encuentra dentro de la organización de la asignatura, pero ahora vamos a clonarlo al perfil individual para seguir con las normas de extensiones, por convención, el nombre deberá ser gh-funcionalidad.
+Para ello crearemos una rama remota que modificará ambos repositorios cuando modifiquemos este. 
+En mi caso, al utilizar gitpod, se pierde la rama remota y esto deja de funcionar. En mi caso he decidido dejar en el Readme de la extensión simplemente la documentación de la extensión que está al final de este Readme. 
+El link al repositorio con la extensión: 
+[TeresaUll/gh-repo-rename](https://github.com/TeresaUll/gh-repo-rename)
 
 ```
 git clone
