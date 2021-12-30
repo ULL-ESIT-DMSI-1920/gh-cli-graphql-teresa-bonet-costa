@@ -37,7 +37,7 @@ mutation {
 
 let { org, repo, name } = program.opts();
 
-if (!org || ! repo || !name) program.help();
+if (!org || !repo || !name) program.help();
 
 if (!shell.which('git')) shell.echo("git not installed")
 if (!shell.which('gh')) shell.echo("gh not installed");

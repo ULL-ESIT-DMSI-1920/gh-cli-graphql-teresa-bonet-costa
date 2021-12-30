@@ -60,8 +60,42 @@ Dentro de GraphQL existen dos tipos de modificadores los cuales son.
 "Type Query" lo utilizaremos para realizar las consultas. 
 
 ## Mutation
-GraphQL también permite insertar, borrar y editar elementos.
+GraphQL también permite insertar, borrar y editar elementos. Para ello, en vez de crear estructuras con query deberemos utilizar mutation. 
 
+# Código de la práctica
+## Combinar JavaScript con GraphQL 
+Debemos generalizar las consultas con parámetros en funciones flecha. 
+Esto lo veremos en las capturas del query y del mutation.
+Tenemos que tener en cuenta que necesitamos la librería shelljs, y también debemos asegurar que tenemos gh y git instalados, sin esto no será posible realizar las consultas.
+![image](shell.png)
+![image](ghgit.png)
+
+Una vez el código ha asegurado esto, se podrá ejecutar la consulta y el cambio de la siguiente forma:
+![image](qejec.png)
+![image](mejec.png)
+
+Como vemos, gh api se puede utilizar para graphQL. 
+La opción _-f_ hará que no se fuerze la consulta. _--jq_ hará que se trate el objeto JSON con JQuery.
+## Query
+Hemos añadido una consulta en GraphQL a nuestro código, en esta consulta lo que hacemos es pasarle como parámetro el owner y el nombre del repositorio que busquemos y la consulta nos devolverá su id en la constante id.
+
+![image](query.png)
+
+## Mutation
+Una vez obtenido el id debemos cambiarle el nombre al repositorio, esto lo podemos hacer con mutation y utilizando la función updateRepository. 
+
+![image](mutation.png)
+
+## Clonar el repositorio a un repositorio de nuestro perfil
+
+Hemos desarrollado el código en el repositorio que se encuentra dentro de la organización de la asignatura, pero ahora vamos a clonarlo al perfil individual para seguir con las normas de extensiones. Para ello  ejecutamos:
+
+```
+git clone
+git remote add [NuevoRepo]
+git push [ramaRemota]
+
+```
 
 # gh-repo-rename
 
