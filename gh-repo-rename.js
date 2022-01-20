@@ -50,7 +50,7 @@ if (r.code !== 0) {
   console.error(r.stderr);
   process.exit(r.code);
 }
-// console.log("getRepoId return = ", r.stdout);
+ console.log("getRepoId return = ", r.stdout);
 
 const Id = r.stdout.replace(/\s+$/g,'');
 

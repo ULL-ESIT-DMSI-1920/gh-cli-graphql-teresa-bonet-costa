@@ -10,4 +10,4 @@ fi
 
 SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
-node ${SCRIPT_DIR}/gh-teresa-repo-rename.js "$@"
+node ${SCRIPT_DIR}/gh-repo-rename.js "$@"
